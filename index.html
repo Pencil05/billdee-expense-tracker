@@ -16,54 +16,65 @@
       --line: #e9e5df;
       --accent: #d44769;
       --accent-soft: #fff0f3;
-      --font: "Leelawadee UI", Tahoma, Arial, sans-serif;
+      --font: "TH Sarabun IT๙", "TH Sarabun IT9", "TH Sarabun New", "TH Sarabun PSK", "Sarabun", Tahoma, Arial, sans-serif;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); font-size: 20px; }
     main { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 50px; }
     header { margin-bottom: 25px; }
-    h1 { margin: 0; font-size: 29px; line-height: 1.25; letter-spacing: -.04em; }
+    h1 { margin: 0; font-size: 38px; line-height: 1.25; letter-spacing: -.04em; }
     .layout { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(350px, .92fr); gap: 20px; align-items: stretch; }
     .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 9px 28px #29313b08; }
     .ledger { padding: 18px; }
     .chart-panel { padding: 20px 22px; display: flex; flex-direction: column; align-items: center; }
-    h2 { align-self: flex-start; margin: 1px 0 17px; font-size: 15px; font-weight: 700; }
+    h2 { align-self: flex-start; margin: 1px 0 17px; font-size: 24px; font-weight: 700; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     col:first-child { width: 67%; }
     col:last-child { width: 33%; }
-    th { padding: 0 10px 11px; border-bottom: 1px solid var(--line); color: var(--muted); text-align: left; font-size: 11px; font-weight: 600; }
+    th { padding: 0 10px 11px; border-bottom: 1px solid var(--line); color: var(--muted); text-align: left; font-size: 18px; font-weight: 600; }
     th:last-child { text-align: right; }
     td { padding: 6px 7px; border-bottom: 1px solid #f0eeeb; }
     tbody tr:last-of-type td { border-bottom: 1px solid #f0eeeb; }
-    .edit-field { width: 100%; min-width: 0; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 13px; padding: 9px 8px; outline: 0; transition: background .15s, border-color .15s, box-shadow .15s; }
+    .edit-field { width: 100%; min-width: 0; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-size: 22px; padding: 7px 8px; outline: 0; transition: background .15s, border-color .15s, box-shadow .15s; }
     .edit-field:hover { background: #faf9f7; }
     .edit-field:focus { background: #fff; border-color: #efb7c4; box-shadow: 0 0 0 3px #d4476916; }
     .price { text-align: right; font-variant-numeric: tabular-nums; }
+    .name-wrap { display: flex; align-items: center; gap: 7px; }
+    .name-wrap .edit-field { flex: 1; }
+    .color-picker-wrap { position: relative; flex: none; }
+    .color-button { width: 24px; height: 24px; padding: 0; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px #0002; cursor: pointer; }
+    .color-tray { position: absolute; z-index: 5; top: 31px; left: 0; display: grid; grid-template-columns: repeat(7, 26px); gap: 6px; width: 230px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; box-shadow: 0 8px 24px #18233322; }
+    .color-tray[hidden] { display: none; }
+    .swatch { width: 24px; height: 24px; padding: 0; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px #0002; cursor: pointer; }
+    .swatch.selected { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .delete-button { width: 30px; height: 30px; flex: none; border: 0; border-radius: 8px; background: transparent; color: #a34a5d; font-size: 22px; line-height: 1; cursor: pointer; }
+    .delete-button:hover { background: #fff0f3; }
     .add-row td { padding: 12px 4px 9px; border-bottom: 1px solid var(--line); }
-    .add-button { width: 100%; border: 1px dashed #e7a4b3; border-radius: 10px; background: #fffafb; color: var(--accent); padding: 10px; font: inherit; font-size: 12px; font-weight: 700; transition: background .15s, border-color .15s; }
+    .add-button { width: 100%; border: 1px dashed #e7a4b3; border-radius: 10px; background: #fffafb; color: var(--accent); padding: 10px; font: inherit; font-size: 19px; font-weight: 700; transition: background .15s, border-color .15s; }
     .add-button:hover { background: var(--accent-soft); border-color: var(--accent); }
     .plus { display: inline-grid; width: 18px; height: 18px; margin-right: 5px; place-items: center; border-radius: 50%; background: var(--accent); color: #fff; font-size: 16px; line-height: 1; vertical-align: -2px; }
-    tfoot td { padding: 15px 10px 3px; border: 0; font-weight: 700; font-size: 14px; }
-    tfoot td:last-child { text-align: right; color: var(--accent); font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tfoot td { padding: 15px 10px 3px; border: 0; font-weight: 700; font-size: 21px; }
+    tfoot td:last-child { text-align: right; color: var(--accent); font-size: 25px; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .chart-title { align-self: flex-start; }
     .donut-wrap { width: min(100%, 360px); aspect-ratio: 1; position: relative; display: grid; place-items: center; margin: 1px auto 5px; }
     #donut { width: 100%; height: 100%; overflow: visible; }
     .slice { cursor: pointer; transition: opacity .16s, filter .16s; outline: none; }
     .slice:hover, .slice:focus { filter: brightness(1.07); }
     .chart-center { position: absolute; width: 49%; text-align: center; pointer-events: none; }
-    .center-label { color: var(--muted); font-size: 11px; line-height: 1.4; }
-    .center-value { margin-top: 4px; font-size: clamp(17px, 2.7vw, 23px); font-weight: 750; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+    .center-label { color: var(--muted); font-size: 18px; line-height: 1.4; }
+    .center-value { margin-top: 4px; font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
     .legend { display: grid; width: min(100%, 480px); grid-template-columns: 1fr 1fr; gap: 1px 14px; margin-top: 2px; }
     .legend-item { display: grid; grid-template-columns: 9px minmax(0,1fr) auto; align-items: center; gap: 7px; min-width: 0; border-radius: 8px; padding: 7px 6px; transition: background .15s, opacity .15s; }
     .legend-item.active, .legend-item:hover { background: #f8f6f3; }
     .legend-dot { width: 9px; height: 9px; border-radius: 3px; }
-    .legend-name { overflow: hidden; color: #4c5660; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
-    .legend-amount { color: var(--ink); font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .legend-name { overflow: hidden; color: #4c5660; font-size: 17px; text-overflow: ellipsis; white-space: nowrap; }
+    .legend-amount { color: var(--ink); font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .storage-note { margin: 14px 0 0; color: var(--muted); font-size: 16px; text-align: center; }
     .empty-chart { fill: none; stroke: #eeece8; stroke-width: 28; }
     @media (max-width: 780px) {
       main { width: min(620px, calc(100% - 28px)); padding-top: 25px; }
       header { margin-bottom: 18px; }
-      h1 { font-size: 25px; }
+      h1 { font-size: 33px; }
       .layout { grid-template-columns: 1fr; gap: 14px; }
       .ledger { padding: 12px; }
       .chart-panel { padding: 18px 15px; }
@@ -74,8 +85,12 @@
       .legend { grid-template-columns: 1fr; }
       col:first-child { width: 62%; }
       col:last-child { width: 38%; }
-      .edit-field { font-size: 12px; padding: 9px 6px; }
-      tfoot td:last-child { font-size: 15px; }
+      .edit-field { font-size: 19px; padding: 8px 5px; }
+      .name-wrap { gap: 5px; }
+      .color-button { width: 21px; height: 21px; }
+      .delete-button { width: 25px; font-size: 20px; }
+      .color-tray { grid-template-columns: repeat(6, 26px); width: 194px; }
+      tfoot td:last-child { font-size: 22px; }
     }
   </style>
 </head>
@@ -104,13 +119,14 @@
           </div>
         </div>
         <div class="legend" id="legend" aria-label="รายละเอียดในกราฟ"></div>
+        <p class="storage-note">บันทึกอัตโนมัติในเบราว์เซอร์นี้</p>
       </section>
     </section>
   </main>
   <script>
     (() => {
       const KEY = 'billdee_simple_v1';
-      const colors = ['#d44769','#e79048','#5e8e7b','#6b8ec2','#a06eaa','#86a84f','#d36d59','#5fa6ab','#b08b53','#7b8292','#c4779c'];
+      const colors = ['#d44769','#e79048','#5e8e7b','#6b8ec2','#a06eaa','#86a84f','#d36d59','#5fa6ab','#b08b53','#7b8292','#c4779c','#ef6c8f','#3f7cac','#f0a202','#6a994e','#9b5de5','#00a896','#f15bb5','#577590','#f9844a','#90be6d','#277da1','#f3722c','#43aa8b','#f94144','#7b2cbf','#4895ef','#b08968','#52b788','#e76f51','#4361ee','#bc6c25','#2a9d8f','#d00000','#7209b7','#4d908e','#f8961e','#577399','#b56576','#386641'];
       const defaults = [
         ['ค่าเหล้าตะวันแดง',4200], ['ค่าเด็ก',3000], ['ปลั๊กไฟรุ่น',1400],
         ['รีเจนซี่',3600], ['ค่าเด็ก',7500], ['โอนให้บุคคล',2000],
@@ -125,13 +141,30 @@
       };
       let bills = loadBills();
 
+      function randomColor(used = new Set()) {
+        const taken = new Set([...used].map(color => String(color).toLowerCase()));
+        const available = colors.filter(color => !taken.has(color.toLowerCase()));
+        if (available.length) return available[Math.floor(Math.random() * available.length)];
+        for (let tries = 0; tries < 720; tries++) {
+          const color = `hsl(${Math.floor(Math.random() * 360)} ${55 + Math.floor(Math.random() * 31)}% ${42 + Math.floor(Math.random() * 20)}%)`;
+          if (!taken.has(color.toLowerCase())) { colors.push(color); return color; }
+        }
+        return `hsl(${Date.now() % 360} 70% 50%)`;
+      }
       function normalize(list) {
         if (!Array.isArray(list)) return null;
-        return list.map((item, i) => ({
-          id: String(item?.id ?? `bill-${Date.now()}-${i}`),
-          name: String(item?.name ?? ''),
-          amount: safeAmount(item?.amount)
-        }));
+        const used = new Set();
+        return list.map((item, i) => {
+          const savedColor = typeof item?.color === 'string' && item.color ? item.color : '';
+          const color = savedColor && !used.has(savedColor.toLowerCase()) ? savedColor : randomColor(used);
+          used.add(color.toLowerCase());
+          return {
+            id: String(item?.id ?? `bill-${Date.now()}-${i}`),
+            name: String(item?.name ?? ''),
+            amount: safeAmount(item?.amount),
+            color
+          };
+        });
       }
       function loadBills() {
         try {
@@ -144,11 +177,12 @@
             if (migrated?.length) return migrated;
           }
         } catch (_) {}
-        return defaults.map(x => ({...x}));
+        return normalize(defaults) ?? [];
       }
       function persist() {
         try { localStorage.setItem(KEY, JSON.stringify(bills)); } catch (_) {}
       }
+      if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
       function totals() { return bills.reduce((sum, item) => sum + safeAmount(item.amount), 0); }
       function grouped() {
         const map = new Map();
@@ -156,9 +190,12 @@
           const value = safeAmount(item.amount);
           if (!value) continue;
           const name = item.name.trim() || 'ไม่ระบุรายการ';
-          map.set(name, (map.get(name) || 0) + value);
+          const color = item.color || randomColor(new Set([...map.values()].map(entry => entry.color)));
+          const key = `${name}\u0000${color}`;
+          const existing = map.get(key);
+          map.set(key, { name, color, value: (existing?.value || 0) + value });
         }
-        return [...map].map(([name, value]) => ({ name, value })).sort((a,b) => b.value-a.value);
+        return [...map.values()].sort((a,b) => b.value-a.value);
       }
       function drawTable() {
         const rows = $('billRows');
@@ -166,12 +203,33 @@
         bills.forEach((item, index) => {
           const tr = document.createElement('tr');
           const nameCell = document.createElement('td');
+          const nameWrap = document.createElement('div'); nameWrap.className = 'name-wrap';
+          const pickerWrap = document.createElement('div'); pickerWrap.className = 'color-picker-wrap';
+          const colorButton = document.createElement('button'); colorButton.className = 'color-button'; colorButton.type = 'button';
+          colorButton.style.background = item.color; colorButton.setAttribute('aria-label', `เลือกสีรายการ ${item.name || index + 1}`);
+          const tray = document.createElement('div'); tray.className = 'color-tray'; tray.hidden = true; tray.setAttribute('role', 'group'); tray.setAttribute('aria-label', 'เลือกสี');
+          colors.forEach(color => {
+            const swatch = document.createElement('button'); swatch.className = `swatch${color.toLowerCase() === item.color.toLowerCase() ? ' selected' : ''}`; swatch.type = 'button';
+            swatch.style.background = color; swatch.setAttribute('aria-label', `ใช้สี ${color}`);
+            swatch.addEventListener('click', () => { item.color = color; persist(); drawTable(); drawChart(); });
+            tray.append(swatch);
+          });
+          colorButton.addEventListener('click', event => {
+            event.stopPropagation();
+            document.querySelectorAll('.color-tray').forEach(other => { if (other !== tray) other.hidden = true; });
+            tray.hidden = !tray.hidden;
+          });
+          pickerWrap.append(colorButton, tray);
           const nameInput = document.createElement('input');
           nameInput.className = 'edit-field'; nameInput.type = 'text'; nameInput.value = item.name;
           nameInput.setAttribute('aria-label', `ชื่อรายการที่ ${index + 1}`);
           nameInput.autocomplete = 'off';
           nameInput.addEventListener('input', () => { item.name = nameInput.value; persist(); drawChart(); });
-          nameCell.append(nameInput);
+          nameWrap.append(pickerWrap, nameInput);
+          const deleteButton = document.createElement('button'); deleteButton.className = 'delete-button'; deleteButton.type = 'button'; deleteButton.textContent = '×';
+          deleteButton.title = `ลบรายการ ${item.name || index + 1}`; deleteButton.setAttribute('aria-label', deleteButton.title);
+          deleteButton.addEventListener('click', () => { bills.splice(index, 1); persist(); drawTable(); drawChart(); });
+          nameWrap.append(deleteButton); nameCell.append(nameWrap);
           const amountCell = document.createElement('td');
           const amountInput = document.createElement('input');
           amountInput.className = 'edit-field price'; amountInput.type = 'number'; amountInput.min = '0'; amountInput.step = '0.01';
@@ -210,7 +268,7 @@
         data.forEach((entry, i) => {
           const sweep = entry.value / sum * Math.PI * 2;
           const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-          const color = colors[i % colors.length];
+          const color = entry.color;
           path.setAttribute('d', donutPath(angle, angle + sweep, 120, 72));
           path.setAttribute('fill', color); path.setAttribute('stroke', '#fff'); path.setAttribute('stroke-width', '2');
           path.setAttribute('class', 'slice'); path.setAttribute('tabindex','0'); path.setAttribute('role','button');
@@ -230,7 +288,7 @@
         });
       }
       $('addButton').addEventListener('click', () => {
-        bills.push({ id: `bill-${Date.now()}-${Math.random().toString(16).slice(2)}`, name: '', amount: 0 });
+        bills.push({ id: `bill-${Date.now()}-${Math.random().toString(16).slice(2)}`, name: '', amount: 0, color: randomColor(new Set(bills.map(item => item.color))) });
         persist(); drawTable(); drawChart();
         const inputs = $('billRows').querySelectorAll('input');
         inputs[inputs.length - 2]?.focus();
