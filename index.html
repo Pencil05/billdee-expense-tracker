@@ -52,9 +52,32 @@
     .delete-button { width: 30px; height: 30px; flex: none; border: 0; border-radius: 8px; background: transparent; color: #a34a5d; font-size: 22px; line-height: 1; cursor: pointer; }
     .delete-button:hover { background: #fff0f3; }
     .add-row td { padding: 12px 4px 9px; border-bottom: 1px solid var(--line); }
-    .add-button { width: 100%; border: 1px dashed #e7a4b3; border-radius: 10px; background: #fffafb; color: var(--accent); padding: 10px; font: inherit; font-size: 19px; font-weight: 700; transition: background .15s, border-color .15s; }
+    .add-actions { display: flex; align-items: center; gap: 8px; }
+    .add-button { flex: 1; width: 100%; border: 1px dashed #e7a4b3; border-radius: 10px; background: #fffafb; color: var(--accent); padding: 10px; font: inherit; font-size: 19px; font-weight: 700; cursor: pointer; transition: background .15s, border-color .15s; }
     .add-button:hover { background: var(--accent-soft); border-color: var(--accent); }
     .plus { display: inline-grid; width: 18px; height: 18px; margin-right: 5px; place-items: center; border-radius: 50%; background: var(--accent); color: #fff; font-size: 16px; line-height: 1; vertical-align: -2px; }
+    .image-add-button { display: grid; width: 42px; height: 42px; flex: none; place-items: center; border: 1px solid #eadfe2; border-radius: 10px; background: #fff; color: var(--accent); cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+    .image-add-button:hover { background: var(--accent-soft); border-color: #e7a4b3; transform: translateY(-1px); }
+    .image-add-button svg { width: 21px; height: 21px; }
+    .image-input { display: none; }
+    dialog { width: min(680px, calc(100% - 28px)); max-height: min(90vh, 820px); padding: 0; border: 1px solid var(--line); border-radius: 18px; color: var(--ink); box-shadow: 0 24px 80px #11182740; font: inherit; }
+    dialog::backdrop { background: #18212dcc; backdrop-filter: blur(3px); }
+    .receipt-dialog { padding: 22px; }
+    .receipt-dialog h2 { margin: 0 0 4px; font-size: 25px; }
+    .receipt-help { margin: 0 0 16px; color: var(--muted); font-size: 17px; }
+    .receipt-preview { display: grid; min-height: 170px; max-height: 320px; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #f8f7f5; }
+    .receipt-preview img { display: block; max-width: 100%; max-height: 320px; object-fit: contain; }
+    .ocr-status { min-height: 28px; margin: 10px 0 12px; color: #596572; font-size: 16px; }
+    .ocr-status[data-error="true"] { color: #a02d4a; }
+    .receipt-fields { display: grid; grid-template-columns: 1fr 180px; gap: 12px; }
+    .receipt-fields label { display: grid; gap: 5px; color: var(--muted); font-size: 16px; }
+    .receipt-fields input { width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 9px; padding: 9px 10px; color: var(--ink); font: inherit; font-size: 20px; outline: 0; }
+    .receipt-fields input:focus { border-color: #efb7c4; box-shadow: 0 0 0 3px #d4476916; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
+    .dialog-actions button { border: 0; border-radius: 9px; padding: 9px 15px; font: inherit; font-size: 18px; cursor: pointer; }
+    .cancel-button { background: #f0efed; color: var(--ink); }
+    .save-receipt-button { background: var(--accent); color: #fff; font-weight: 700; }
+    .save-receipt-button:hover { background: #bd3557; }
     tfoot td { padding: 15px 10px 3px; border: 0; font-weight: 700; font-size: 21px; }
     tfoot td:last-child { text-align: right; color: var(--accent); font-size: 25px; font-variant-numeric: tabular-nums; white-space: nowrap; }
     .chart-title { align-self: flex-start; }
@@ -81,6 +104,7 @@
       .ledger { padding: 12px; }
       .chart-panel { padding: 18px 15px; }
       .donut-wrap { width: min(88vw, 330px); }
+      .receipt-dialog { padding: 16px; }
     }
     @media (max-width: 420px) {
       main { width: calc(100% - 20px); }
@@ -93,6 +117,7 @@
       .delete-button { width: 25px; font-size: 20px; }
       .color-tray { grid-template-columns: repeat(6, 26px); width: 194px; }
       tfoot td:last-child { font-size: 22px; }
+      .receipt-fields { grid-template-columns: 1fr; }
     }
     @media print {
       @page { size: A4; margin: 14mm; }
@@ -100,7 +125,7 @@
       main { width: 100%; max-width: none; padding: 0; }
       header { margin-bottom: 10mm; }
       h1 { font-size: 27pt; }
-      .pdf-button, .add-row, .delete-button { display: none !important; }
+      .pdf-button, .add-row, .delete-button, dialog { display: none !important; }
       .layout { grid-template-columns: 1.1fr .9fr; gap: 8mm; }
       .panel { box-shadow: none; border-color: #ddd; break-inside: avoid; }
       .ledger, .chart-panel { padding: 5mm; }
@@ -123,7 +148,7 @@
           <thead><tr><th scope="col">รายการ</th><th scope="col">ราคา (บาท)</th></tr></thead>
           <tbody id="billRows"></tbody>
           <tfoot>
-            <tr class="add-row"><td colspan="2"><button class="add-button" id="addButton" type="button"><span class="plus" aria-hidden="true">+</span>เพิ่มรายการ</button></td></tr>
+            <tr class="add-row"><td colspan="2"><div class="add-actions"><button class="add-button" id="addButton" type="button"><span class="plus" aria-hidden="true">+</span>เพิ่มรายการ</button><button class="image-add-button" id="imageAddButton" type="button" title="เพิ่มรายการจากภาพบิล" aria-label="เพิ่มรายการจากภาพบิล"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="9" r="1.6" fill="currentColor"/><path d="m5 17 4.4-4.4a1.6 1.6 0 0 1 2.3 0l1.3 1.3 1.2-1.2a1.6 1.6 0 0 1 2.3 0L20 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><input class="image-input" id="receiptImage" type="file" accept="image/*" aria-label="เลือกรูปภาพบิล"></div></td></tr>
             <tr class="total-row"><td>ยอดรวม</td><td id="grandTotal">฿0</td></tr>
           </tfoot>
         </table>
@@ -142,6 +167,19 @@
       </section>
     </section>
   </main>
+  <dialog id="receiptDialog" aria-labelledby="receiptDialogTitle">
+    <form class="receipt-dialog" id="receiptForm">
+      <h2 id="receiptDialogTitle">เพิ่มรายการจากภาพบิล</h2>
+      <p class="receipt-help">ระบบจะช่วยอ่านข้อความจากภาพ ตรวจสอบและแก้ชื่อหรือยอดก่อนบันทึกได้</p>
+      <div class="receipt-preview"><img id="receiptPreview" alt="ตัวอย่างภาพบิลที่เลือก"></div>
+      <p class="ocr-status" id="ocrStatus" role="status" aria-live="polite">กำลังเตรียมภาพ…</p>
+      <div class="receipt-fields">
+        <label>ชื่อรายการ<input id="receiptName" type="text" autocomplete="off" placeholder="เช่น ค่าอาหาร"></label>
+        <label>ยอดเงิน (บาท)<input id="receiptAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+      </div>
+      <div class="dialog-actions"><button class="cancel-button" id="cancelReceipt" type="button">ยกเลิก</button><button class="save-receipt-button" type="submit">เพิ่มรายการ</button></div>
+    </form>
+  </dialog>
   <script>
     (() => {
       const KEY = 'billdee_simple_v1';
@@ -326,6 +364,101 @@
           angle += sweep;
         });
       }
+      let previewUrl = '';
+      let ocrWorkerPromise;
+      function setOcrStatus(message, isError = false) {
+        $('ocrStatus').textContent = message;
+        $('ocrStatus').dataset.error = isError ? 'true' : 'false';
+      }
+      async function getTesseract() {
+        if (window.Tesseract) return window.Tesseract;
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('โหลดระบบอ่านข้อความไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง'));
+          document.head.append(script);
+        });
+        return window.Tesseract;
+      }
+      async function getOcrWorker() {
+        if (!ocrWorkerPromise) {
+          ocrWorkerPromise = getTesseract().then(Tesseract => Tesseract.createWorker('tha+eng', 1, { logger: event => {
+            if (event.status === 'recognizing text' && event.progress) setOcrStatus(`กำลังอ่านข้อความจากภาพ… ${Math.round(event.progress * 100)}%`);
+            else if (event.status === 'loading language traineddata') setOcrStatus('กำลังเตรียมภาษาไทยสำหรับอ่านข้อความ…');
+          }})).catch(error => { ocrWorkerPromise = null; throw error; });
+        }
+        return ocrWorkerPromise;
+      }
+      function extractReceipt(text) {
+        const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+        let amount = '';
+        const amountHeading = lines.findIndex(line => /จำนวนเงิน|ยอดเงิน|amount/i.test(line));
+        if (amountHeading >= 0) {
+          const nearby = lines.slice(amountHeading + 1, amountHeading + 5).join(' ');
+          const match = nearby.match(/\b(\d[\d,]*\.\d{2})\b/);
+          if (match) amount = match[1].replace(/,/g, '');
+        }
+        if (!amount) {
+          const candidates = [...text.matchAll(/\b(\d{1,3}(?:,\d{3})*\.\d{2})\b/g)].map(match => match[1].replace(/,/g, '')).filter(value => Number(value) > 0);
+          amount = candidates[0] || '';
+        }
+        let name = '';
+        const memoIndex = lines.findIndex(line => /บันทึกช่วยจำ/.test(line));
+        if (memoIndex >= 0) {
+          name = lines[memoIndex].replace(/^.*?บันทึกช่วยจำ\s*[:：]?\s*/, '').trim();
+          if (!name) name = lines.slice(memoIndex + 1).find(line => !/^(QR\s*Code|สแกน\s*QR)/i.test(line)) || '';
+        }
+        return { name: name.slice(0, 80), amount };
+      }
+      function releasePreview() {
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        previewUrl = '';
+        $('receiptPreview').removeAttribute('src');
+      }
+      $('imageAddButton').addEventListener('click', () => $('receiptImage').click());
+      $('receiptImage').addEventListener('change', async event => {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { setOcrStatus('กรุณาเลือกไฟล์รูปภาพ', true); return; }
+        releasePreview();
+        previewUrl = URL.createObjectURL(file);
+        $('receiptPreview').src = previewUrl;
+        $('receiptName').value = '';
+        $('receiptAmount').value = '';
+        $('receiptDialog').showModal();
+        setOcrStatus('กำลังเตรียมอ่านข้อความ…');
+        try {
+          const worker = await getOcrWorker();
+          const { data } = await worker.recognize(file);
+          const extracted = extractReceipt(data.text || '');
+          $('receiptName').value = extracted.name;
+          $('receiptAmount').value = extracted.amount;
+          setOcrStatus(extracted.amount || extracted.name ? 'อ่านข้อความแล้ว ตรวจสอบหรือแก้ไขข้อมูลก่อนเพิ่มรายการ' : 'อ่านข้อความจากภาพไม่ชัด กรอกชื่อและยอดเงินด้วยตนเองได้');
+        } catch (error) {
+          setOcrStatus(`${error.message || 'อ่านข้อความจากภาพไม่สำเร็จ'} — กรอกข้อมูลเองแล้วเพิ่มรายการได้`, true);
+        }
+      });
+      function closeReceiptDialog() {
+        $('receiptDialog').close();
+        releasePreview();
+      }
+      $('cancelReceipt').addEventListener('click', closeReceiptDialog);
+      $('receiptDialog').addEventListener('click', event => { if (event.target === $('receiptDialog')) closeReceiptDialog(); });
+      $('receiptDialog').addEventListener('close', releasePreview);
+      $('receiptForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const amountText = $('receiptAmount').value.trim();
+        if (!amountText || !Number.isFinite(Number(amountText))) {
+          setOcrStatus('กรอกยอดเงินให้ถูกต้องก่อนเพิ่มรายการ', true);
+          $('receiptAmount').focus();
+          return;
+        }
+        bills.push({ id: `bill-${Date.now()}-${Math.random().toString(16).slice(2)}`, name: $('receiptName').value.trim(), amount: safeAmount(amountText), color: randomColor(new Set(bills.map(item => item.color))) });
+        persist(); drawTable(); drawChart(); closeReceiptDialog();
+      });
       $('addButton').addEventListener('click', () => {
         bills.push({ id: `bill-${Date.now()}-${Math.random().toString(16).slice(2)}`, name: '', amount: 0, color: randomColor(new Set(bills.map(item => item.color))) });
         persist(); drawTable(); drawChart();
