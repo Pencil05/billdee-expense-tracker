@@ -21,8 +21,10 @@
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font); font-size: 20px; }
     main { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 50px; }
-    header { margin-bottom: 25px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 25px; }
     h1 { margin: 0; font-size: 38px; line-height: 1.25; letter-spacing: -.04em; }
+    .pdf-button { flex: none; border: 0; border-radius: 10px; background: var(--accent); color: #fff; padding: 10px 16px; font: inherit; font-size: 19px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px #d4476928; }
+    .pdf-button:hover { background: #bd3557; }
     .layout { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(350px, .92fr); gap: 20px; align-items: stretch; }
     .panel { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 9px 28px #29313b08; }
     .ledger { padding: 18px; }
@@ -92,11 +94,28 @@
       .color-tray { grid-template-columns: repeat(6, 26px); width: 194px; }
       tfoot td:last-child { font-size: 22px; }
     }
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: #fff; font-size: 15pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      main { width: 100%; max-width: none; padding: 0; }
+      header { margin-bottom: 10mm; }
+      h1 { font-size: 27pt; }
+      .pdf-button, .add-row, .delete-button { display: none !important; }
+      .layout { grid-template-columns: 1.1fr .9fr; gap: 8mm; }
+      .panel { box-shadow: none; border-color: #ddd; break-inside: avoid; }
+      .ledger, .chart-panel { padding: 5mm; }
+      .edit-field { border: 0 !important; box-shadow: none !important; background: transparent !important; padding: 2mm 1mm; font-size: 15pt; }
+      .color-button { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .color-tray { display: none !important; }
+      .donut-wrap { width: 72mm; }
+      .legend { grid-template-columns: 1fr; }
+      .storage-note { display: none; }
+    }
   </style>
 </head>
 <body>
   <main>
-    <header><h1>สรุปบิลล์</h1></header>
+    <header><h1>สรุปบิลล์</h1><button class="pdf-button" id="pdfButton" type="button">บันทึก PDF</button></header>
     <section class="layout" aria-label="ตารางรายการและกราฟสรุปบิลล์">
       <section class="panel ledger" aria-label="ตารางบิลล์">
         <table>
@@ -131,8 +150,15 @@
         ['ค่าเหล้าตะวันแดง',4200], ['ค่าเด็ก',3000], ['ปลั๊กไฟรุ่น',1400],
         ['รีเจนซี่',3600], ['ค่าเด็ก',7500], ['โอนให้บุคคล',2000],
         ['ค่ากับข้าว',4300], ['โอนให้บุคคล',4355], ['ค่าเหล้า',2000],
-        ['ค่าเหล้า',11700], ['ค่าน้ำแข็ง',280]
-      ].map(([name, amount], i) => ({ id: `start-${i}`, name, amount }));
+        ['ค่าเหล้า',11700], ['ค่าน้ำแข็ง',280],
+        ['ค่าเด็ก ก ตวด',1500], ['ค่าเด็ก ตวด',1500], ['ค่าเด็ก ตวด',1500]
+      ].map(([name, amount], i) => ({ id: i < 11 ? `start-${i}` : `receipt-${15859728 + i - 11}`, name, amount }));
+      const addedBills = [
+        { id: 'receipt-15859728', name: 'ค่าเด็ก ก ตวด', amount: 1500 },
+        { id: 'receipt-15859729', name: 'ค่าเด็ก ตวด', amount: 1500 },
+        { id: 'receipt-15859730', name: 'ค่าเด็ก ตวด', amount: 1500 }
+      ];
+      const seedMarker = 'billdee_seed_receipts_20261120_v1';
       const $ = id => document.getElementById(id);
       const money = n => Number(n || 0).toLocaleString('th-TH', { maximumFractionDigits: 2 });
       const safeAmount = value => {
@@ -169,15 +195,28 @@
       function loadBills() {
         try {
           const saved = localStorage.getItem(KEY);
-          if (saved !== null) return normalize(JSON.parse(saved)) ?? defaults.map(x => ({...x}));
+          if (saved !== null) return addNewReceiptDefaults(normalize(JSON.parse(saved)) ?? []);
           // Keep any entries already saved by the previous version on this browser.
           const previous = localStorage.getItem('billdee_v1');
           if (previous !== null) {
             const migrated = normalize(JSON.parse(previous));
-            if (migrated?.length) return migrated;
+            if (migrated?.length) return addNewReceiptDefaults(migrated);
           }
         } catch (_) {}
         return normalize(defaults) ?? [];
+      }
+      function addNewReceiptDefaults(list) {
+        if (localStorage.getItem(seedMarker)) return list;
+        const ids = new Set(list.map(item => item.id));
+        const used = new Set(list.map(item => item.color));
+        for (const receipt of addedBills) {
+          if (!ids.has(receipt.id)) {
+            list.push({ ...receipt, color: randomColor(used) });
+            used.add(list[list.length - 1].color);
+          }
+        }
+        try { localStorage.setItem(seedMarker, '1'); } catch (_) {}
+        return list;
       }
       function persist() {
         try { localStorage.setItem(KEY, JSON.stringify(bills)); } catch (_) {}
@@ -293,6 +332,7 @@
         const inputs = $('billRows').querySelectorAll('input');
         inputs[inputs.length - 2]?.focus();
       });
+      $('pdfButton').addEventListener('click', () => window.print());
       drawTable(); drawChart(); persist();
     })();
   </script>
